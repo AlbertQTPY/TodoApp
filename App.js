@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -12,7 +13,7 @@ const TodoApp = () => {
     }
   };
 
-  const toggleTodo = (id) => {
+  const clickTodo = (id) => {
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -26,28 +27,37 @@ const TodoApp = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Todo App</Text>
+      <Text style={styles.title}>TODO APP</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Add a new todo"
+          placeholder="Add a new task"
           value={newTodo}
           onChangeText={(text) => setNewTodo(text)}
         />
-        < Button title="Add Task" onPress={addTodo} />
+        <TouchableOpacity onPress={addTodo}>
+          <MaterialIcons name="add" size={24} color="black" />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => toggleTodo(item.id)}>
-            <View style={styles.todoItem}>
-              <Text style={[styles.todoText, { textDecorationLine: item.completed ? 'line-through' : 'none' }]}>
-                {item.text}
-              </Text>
-              <Button title="Remove" onPress={() => removeTodo(item.id)} />
-            </View>
-          </TouchableOpacity>
+          <View style={styles.todoItem}>
+            <TouchableOpacity onPress={() => clickTodo(item.id)}>
+              <MaterialIcons
+                name={item.completed ? 'check-box' : 'check-box-outline-blank'}
+                size={24}
+                color={item.completed ? 'black' : 'black'}
+              />
+            </TouchableOpacity>
+            <Text style={[styles.todoText, { textDecorationLine: item.completed ? 'line-through' : 'none' }]}>
+              {item.text}
+            </Text>
+            <TouchableOpacity onPress={() => removeTodo(item.id)}>
+              <MaterialIcons name="delete" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
         )}
       />
     </View>
@@ -58,32 +68,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center'
+    backgroundColor: '#A8EAD',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginTop: 20,
     marginBottom: 20,
+    marginLeft: 120,
+    color: 'black',
   },
   inputContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 20,
-    
-  },
-  button: {
-    backgroundColor: 'black', // Change the button color to black
-    color: 'white',
-    padding: 10,
-    borderRadius: 5,
-
   },
   input: {
     flex: 1,
     marginRight: 10,
     padding: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
+    borderColor: 'black',
+    borderWidth: 3,
+    backgroundColor: 'white',
+    color: 'black',
+    borderRadius: 50,
+  },
+  addTodoButton: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 50,
+    marginTop: 10,
   },
   todoItem: {
     flexDirection: 'row',
@@ -94,15 +108,11 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
+    backgroundColor: 'white',
   },
   todoText: {
     flex: 1,
-  },
-  button: {
-    backgroundColor: 'black', // Change the button color to black
-    color: 'white',
-    padding: 10,
-    borderRadius: 5,
+    marginLeft: 10,
   },
 });
 
